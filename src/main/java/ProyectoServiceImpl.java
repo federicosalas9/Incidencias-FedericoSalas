@@ -52,21 +52,12 @@ public class ProyectoServiceImpl implements ProyectoService{
 
     @Override
     public Collection<Proyecto> getProyectosDeUs(Usuario usuario) {
-        HashMap<Integer,Proyecto> proyectosDeUs=proyectoHashMap;
-        Collection<Proyecto> proyectoCollection=proyectoHashMap.values();
-
-       for (Proyecto p: proyectoCollection){
+        HashMap<Integer,Proyecto> proyectosDeUs=new HashMap<>();
+        for (Proyecto p: proyectoHashMap.values()){
             if(p.getPropietario().equals(usuario)){
                 proyectosDeUs.put(p.getId(),p);
             }
         }
-
-        /*Iterator<Proyecto> it=getProyectos().iterator();
-        while(it.hasNext()){
-            if(it.next().getPropietario().equals(usuario)){
-                proyectosDeUs.put(it.next().getId(),it.next());
-            }
-        }*/
         return proyectosDeUs.values();
     }
 }
