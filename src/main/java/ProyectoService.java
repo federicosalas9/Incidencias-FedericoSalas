@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface ProyectoService {
@@ -7,4 +8,5 @@ public interface ProyectoService {
     public Proyecto getProyecto(int id);
     public Proyecto editProyecto (Proyecto proyecto) throws ProyectoException;
     public void deleteProyecto(int id);
+    public Collection<Proyecto> getProyectosDeUs(Usuario usuario);
 }

@@ -110,11 +110,11 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los proyectos de un usuario
-      /*  get("/usuario/:id/proyectos",(request, response) -> {
+       get("/usuario/proyectos",(request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
-                    new Gson().toJsonTree(usuarioService.getProyectosDeUs(usuarioService.getUsuario(Integer.parseInt(request.params(":id")))))));
-        });*/
+                    new Gson().toJsonTree(proyectoService.getProyectosDeUs(usuarioService.getUsuario(1)))));
+        });
     }
 
     private static void init(){
@@ -124,18 +124,17 @@ public class RestfulEjercicio {
         usuarioService.addUsuario(usuario1);
         usuarioService.addUsuario(usuario2);
         usuarioService.addUsuario(usuario3);
-        Proyecto proyecto1=new Proyecto(11,"proyecto1",usuarioService.getUsuario(1));
-        Proyecto proyecto2=new Proyecto(22,"proyecto2",usuarioService.getUsuario(2));
+        Proyecto proyecto1=new Proyecto(11,"proyecto1",usuario1);
+        Proyecto proyecto2=new Proyecto(22,"proyecto2",usuario2);
         proyectoService.addProyecto(proyecto1);
         proyectoService.addProyecto(proyecto2);
         Incidente incidente1=new Incidente(111,Clasificacion.CRITICO,
-                "El incidente1 asignado al proy 1 del us 1",
-                usuarioService.getUsuario(3),proyectoService.getProyecto(11).getPropietario(),
-                Estado.ASIGNADO,new Date(),new Date(),proyectoService.getProyecto(1));
+                "El incidente1 asignado al proy 1 del us 1", usuario3,usuario1,
+                Estado.ASIGNADO,new Date(),new Date(),proyecto1);
         Incidente incidente2=new Incidente(222,Clasificacion.NORMAL,
                 "El incidente2 asignado al proy 2 del us 2",
-                usuarioService.getUsuario(3),proyectoService.getProyecto(22).getPropietario(),
-                Estado.RESUELTO,new Date(),new Date(),proyectoService.getProyecto(2));
+                usuario3,usuario2,
+                Estado.RESUELTO,new Date(),new Date(),proyecto2);
         incidenteService.addIncidente(incidente1);
         incidenteService.addIncidente(incidente2);
     }

@@ -1,5 +1,4 @@
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 
 public class ProyectoServiceImpl implements ProyectoService{
 
@@ -49,5 +48,25 @@ public class ProyectoServiceImpl implements ProyectoService{
     @Override
     public void deleteProyecto(int id) {
         proyectoHashMap.remove(id);
+    }
+
+    @Override
+    public Collection<Proyecto> getProyectosDeUs(Usuario usuario) {
+        HashMap<Integer,Proyecto> proyectosDeUs=proyectoHashMap;
+        Collection<Proyecto> proyectoCollection=proyectoHashMap.values();
+
+       for (Proyecto p: proyectoCollection){
+            if(p.getPropietario().equals(usuario)){
+                proyectosDeUs.put(p.getId(),p);
+            }
+        }
+
+        /*Iterator<Proyecto> it=getProyectos().iterator();
+        while(it.hasNext()){
+            if(it.next().getPropietario().equals(usuario)){
+                proyectosDeUs.put(it.next().getId(),it.next());
+            }
+        }*/
+        return proyectosDeUs.values();
     }
 }
