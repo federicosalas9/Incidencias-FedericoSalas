@@ -1,8 +1,8 @@
 import java.util.*;
 
-public class ProyectoServiceImpl implements ProyectoService{
+public class ProyectoServiceImpl implements ProyectoService {
 
-    private HashMap<Integer,Proyecto> proyectoHashMap;
+    private HashMap<Integer, Proyecto> proyectoHashMap;
 
     public ProyectoServiceImpl() {
         proyectoHashMap = new HashMap<Integer, Proyecto>();
@@ -10,7 +10,7 @@ public class ProyectoServiceImpl implements ProyectoService{
 
     @Override
     public void addProyecto(Proyecto proyecto) {
-        proyectoHashMap.put(proyecto.getId(),proyecto);
+        proyectoHashMap.put(proyecto.getId(), proyecto);
     }
 
     @Override
@@ -25,22 +25,22 @@ public class ProyectoServiceImpl implements ProyectoService{
     }
 
     @Override
-    public Proyecto editProyecto(Proyecto proyecto) throws ProyectoException{
+    public Proyecto editProyecto(Proyecto proyecto) throws ProyectoException {
         try {
-            if(proyecto.getId()==0){
+            if (proyecto.getId() == 0) {
                 throw new UsuarioException("El id del usuario que desea editar no puede ser nulo");
             }
-            Proyecto proyectoAEditar=proyectoHashMap.get(proyecto.getId());
+            Proyecto proyectoAEditar = proyectoHashMap.get(proyecto.getId());
             //A continuacion comienzo a editar el proyecto
-            if(proyecto.getTitulo()!=null){
+            if (proyecto.getTitulo() != null) {
                 proyectoAEditar.setTitulo(proyecto.getTitulo());
             }
-            if(proyecto.getPropietario()!=null){
+            if (proyecto.getPropietario() != null) {
                 proyectoAEditar.setPropietario(proyecto.getPropietario());
             }
             return proyectoAEditar;
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
             throw new ProyectoException(exception.getMessage());
         }
     }
@@ -52,10 +52,10 @@ public class ProyectoServiceImpl implements ProyectoService{
 
     @Override
     public Collection<Proyecto> getProyectosDeUs(Usuario usuario) {
-        HashMap<Integer,Proyecto> proyectosDeUs=new HashMap<>();
-        for (Proyecto p: proyectoHashMap.values()){
-            if(p.getPropietario().equals(usuario)){
-                proyectosDeUs.put(p.getId(),p);
+        HashMap<Integer, Proyecto> proyectosDeUs = new HashMap<>();
+        for (Proyecto p : getProyectos()) {
+            if (p.getPropietario().getId()==usuario.getId()) {
+                proyectosDeUs.put(p.getId(), p);
             }
         }
         return proyectosDeUs.values();
