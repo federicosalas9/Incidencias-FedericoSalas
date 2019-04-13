@@ -97,7 +97,7 @@ public class RestfulEjercicio {
         });
 
         //Crear un incidente
-        put("/incidentes", (request, response) -> {
+        post("/incidentes", (request, response) -> {
             response.type("application/json");
             Incidente incidente = new Gson().fromJson(request.body(), Incidente.class);
             incidenteService.addIncidente(incidente);
@@ -118,8 +118,49 @@ public class RestfulEjercicio {
                     new Gson().toJsonTree(proyectoService.
                             getProyectosDeUs(usuarioService.getUsuario(Integer.parseInt(request.params(":id")))))));
         });
+
+        //Mostrar todos los incidentes asignados a un usuario
+        get("/usuario/:id/incidentesAsignados", (request, response) -> {
+            response.type("application/json");
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                    new Gson().toJsonTree(incidenteService.
+                            getIncidentesAsignados(usuarioService.getUsuario(Integer.parseInt(request.params(":id")))))));
+        });
+
+        //Mostrar todos los incidentes creados por un usuario
+        get("/usuario/:id/incidentesCreados", (request, response) -> {
+            response.type("application/json");
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                    new Gson().toJsonTree(incidenteService.
+                            getIncidentesCreados(usuarioService.getUsuario(Integer.parseInt(request.params(":id")))))));
+        });
+
+        //Mostrar todos incidentes los asociados a un proyecto
+        get("/proyecto/incidentes", (request, response) -> {
+            response.type("application/json");
+            Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                    new Gson().toJsonTree(incidenteService.
+                            getIncidentesProyecto(proyecto))));
+        });
+
+        //Mostrar todos los incidentes abiertos
+        get("/incidentesAbiertos", (request, response) -> {
+            response.type("application/json");
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                    new Gson().toJsonTree(incidenteService.getIncidentesAbiertos())));
+        });
+
+        //Mostrar todos los incidentes resueltos
+        get("/incidentesResueltos", (request, response) -> {
+            response.type("application/json");
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
+                    new Gson().toJsonTree(incidenteService.getIncidentesResueltos())));
+        });
+
     }
 
+    //Inicializar la API con 3 usuarios precargados, 2 proyectos y 2 incidentes
     private static void init() {
         Usuario usuario1 = new Usuario(1, "Fede1", "Salas1");
         Usuario usuario2 = new Usuario(2, "Fede2", "Salas2");
