@@ -111,7 +111,7 @@ public class RestfulEjercicio {
                     new Gson().toJsonTree(incidenteService.getIncidentes())));
         });
 
-        //Mostrar todos los proyectos de un usuario
+        //Mostrar todos los proyectos de un usuario.
         get("/usuario/:id/proyectos", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
