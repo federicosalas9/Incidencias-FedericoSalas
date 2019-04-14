@@ -50,13 +50,18 @@ public class RestfulEjercicio {
 
         //Eliminar un usuario segun id
         delete("/usuarios/:id", (request, response) -> {
-            response.type("application/json");
-            usuarioService.deleteUsuario(Integer.parseInt(request.params(":id")));
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El usuario fue borrado"));
+            try{
+                response.type("application/json");
+                usuarioService.deleteUsuario(Integer.parseInt(request.params(":id")), proyectoService.getProyectos(),incidenteService.getIncidentes());
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El usuario fue borrado"));
+            }catch (UsuarioException exception){
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR,exception.getMessage()));
+            }
+
         });
 
         //Crear un proyecto
-        post("/proyectos", (request, response) -> {
+        post("/usuarios/proyectos", (request, response) -> {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
             proyectoService.addProyecto(proyecto);
@@ -71,14 +76,14 @@ public class RestfulEjercicio {
         });
 
         //Mostrar un proyecto segun el id
-        get("/proyectos/:id", (request, response) -> {
+        get("/usuarios/proyectos/:id", (request, response) -> {
             response.type("application/json");
             return new Gson().toJsonTree(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(proyectoService.getProyecto(Integer.parseInt(request.params(":id"))))));
         });
 
         //Editar un proyecto segun el id
-        put("/proyectos", (request, response) -> {
+        put("/usuarios/proyectos", (request, response) -> {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
             Proyecto proyectoEditado = proyectoService.editProyecto(proyecto);
@@ -90,14 +95,14 @@ public class RestfulEjercicio {
         });
 
         //Eliminar un proyecto segun id
-        delete("/proyectos/:id", (request, response) -> {
+        delete("/usuarios/proyectos/:id", (request, response) -> {
             response.type("application/json");
             proyectoService.deleteProyecto(Integer.parseInt(request.params(":id")));
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El proyecto fue borrado"));
         });
 
         //Crear un incidente
-        post("/incidentes", (request, response) -> {
+        post("/usuarios/incidentes", (request, response) -> {
             response.type("application/json");
             Incidente incidente = new Gson().fromJson(request.body(), Incidente.class);
             incidenteService.addIncidente(incidente);
@@ -105,14 +110,14 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los incidentes
-        get("/incidentes", (request, response) -> {
+        get("/usuarios/incidentes", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.getIncidentes())));
         });
 
         //Mostrar todos los proyectos de un usuario.
-        get("/usuario/:id/proyectos", (request, response) -> {
+        get("/usuarios/:id/proyectos", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(proyectoService.
@@ -120,7 +125,7 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los incidentes asignados a un usuario
-        get("/usuario/:id/incidentesAsignados", (request, response) -> {
+        get("/usuarios/:id/incidentes/asignados", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.
@@ -128,7 +133,7 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los incidentes creados por un usuario
-        get("/usuario/:id/incidentesCreados", (request, response) -> {
+        get("/usuarios/:id/incidentes/creados", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.
@@ -136,7 +141,7 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos incidentes los asociados a un proyecto
-        get("/proyecto/incidentes", (request, response) -> {
+        get("/usuarios/proyectos/incidentes", (request, response) -> {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
@@ -145,14 +150,14 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los incidentes abiertos
-        get("/incidentesAbiertos", (request, response) -> {
+        get("/usuarios/proyectos/incidentes/abiertos", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.getIncidentesAbiertos())));
         });
 
         //Mostrar todos los incidentes resueltos
-        get("/incidentesResueltos", (request, response) -> {
+        get("/usuarios/proyectos/incidentes/resueltos", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.getIncidentesResueltos())));
@@ -161,7 +166,7 @@ public class RestfulEjercicio {
     }
 
     //Inicializar la API con 3 usuarios precargados, 2 proyectos y 2 incidentes
-    private static void init() {
+    private static void init(){
         Usuario usuario1 = new Usuario(1, "Fede1", "Salas1");
         Usuario usuario2 = new Usuario(2, "Fede2", "Salas2");
         Usuario usuario3 = new Usuario(3, "Fede3", "Salas3");
