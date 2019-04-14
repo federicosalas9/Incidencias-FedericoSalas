@@ -61,7 +61,7 @@ public class RestfulEjercicio {
         });
 
         //Crear un proyecto
-        post("/usuarios/proyectos", (request, response) -> {
+        post("/proyectos", (request, response) -> {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
             proyectoService.addProyecto(proyecto);
@@ -95,10 +95,14 @@ public class RestfulEjercicio {
         });
 
         //Eliminar un proyecto segun id
-        delete("/usuarios/proyectos/:id", (request, response) -> {
-            response.type("application/json");
-            proyectoService.deleteProyecto(Integer.parseInt(request.params(":id")));
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El proyecto fue borrado"));
+        delete("/proyectos/:id", (request, response) -> {
+            try {
+                response.type("application/json");
+                proyectoService.deleteProyecto(Integer.parseInt(request.params(":id")), incidenteService.getIncidentes());
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El proyecto fue borrado"));
+            }catch (Exception exception){
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
+            }
         });
 
         //Crear un incidente
@@ -110,7 +114,7 @@ public class RestfulEjercicio {
         });
 
         //Mostrar todos los incidentes
-        get("/usuarios/incidentes", (request, response) -> {
+        get("/incidentes", (request, response) -> {
             response.type("application/json");
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(incidenteService.getIncidentes())));
