@@ -19,7 +19,8 @@ public class RestfulEjercicio {
             response.type("application/json");
             Usuario usuario = new Gson().fromJson(request.body(), Usuario.class);
             usuarioService.addUsuario(usuario);
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS));
+            response.status(201);
+            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El usuario fue creado"));
         });
 
         //Mostrar todos los usuarios creados
@@ -38,24 +39,27 @@ public class RestfulEjercicio {
 
         //Editar un usuario segun el id
         put("/usuarios", (request, response) -> {
-            response.type("application/json");
-            Usuario usuario = new Gson().fromJson(request.body(), Usuario.class);
-            Usuario usuarioEditado = usuarioService.editUsuario(usuario);
-            if (usuarioEditado != null) {
+            try {
+                response.type("application/json");
+                Usuario usuario = new Gson().fromJson(request.body(), Usuario.class);
+                Usuario usuarioEditado = usuarioService.editUsuario(usuario);
+                response.status(201);
                 return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(usuarioEditado)));
-            } else {
-                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, "Error al editar el usuario"));
+            } catch (Exception exception) {
+                response.status(400);
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
             }
         });
 
         //Eliminar un usuario segun id
         delete("/usuarios/:id", (request, response) -> {
-            try{
+            try {
                 response.type("application/json");
-                usuarioService.deleteUsuario(Integer.parseInt(request.params(":id")), proyectoService.getProyectos(),incidenteService.getIncidentes());
+                usuarioService.deleteUsuario(Integer.parseInt(request.params(":id")), proyectoService.getProyectos(), incidenteService.getIncidentes());
                 return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El usuario fue borrado"));
-            }catch (UsuarioException exception){
-                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR,exception.getMessage()));
+            } catch (UsuarioException exception) {
+                response.status(400);
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
             }
 
         });
@@ -65,6 +69,7 @@ public class RestfulEjercicio {
             response.type("application/json");
             Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
             proyectoService.addProyecto(proyecto);
+            response.status(201);
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS));
         });
 
@@ -76,21 +81,23 @@ public class RestfulEjercicio {
         });
 
         //Mostrar un proyecto segun el id
-        get("/usuarios/proyectos/:id", (request, response) -> {
+        get("/proyectos/:id", (request, response) -> {
             response.type("application/json");
             return new Gson().toJsonTree(new StandardResponse(StatusResponse.SUCCESS,
                     new Gson().toJsonTree(proyectoService.getProyecto(Integer.parseInt(request.params(":id"))))));
         });
 
         //Editar un proyecto segun el id
-        put("/usuarios/proyectos", (request, response) -> {
-            response.type("application/json");
-            Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
-            Proyecto proyectoEditado = proyectoService.editProyecto(proyecto);
-            if (proyectoEditado != null) {
+        put("/proyectos", (request, response) -> {
+            try {
+                response.type("application/json");
+                Proyecto proyecto = new Gson().fromJson(request.body(), Proyecto.class);
+                Proyecto proyectoEditado = proyectoService.editProyecto(proyecto);
+                response.status(201);
                 return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(proyectoEditado)));
-            } else {
-                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, "Error al editar el proyecto"));
+            } catch (Exception exception) {
+                response.status(400);
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
             }
         });
 
@@ -100,7 +107,8 @@ public class RestfulEjercicio {
                 response.type("application/json");
                 proyectoService.deleteProyecto(Integer.parseInt(request.params(":id")), incidenteService.getIncidentes());
                 return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, "El proyecto fue borrado"));
-            }catch (Exception exception){
+            } catch (Exception exception) {
+                response.status(400);
                 return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
             }
         });
@@ -170,7 +178,7 @@ public class RestfulEjercicio {
     }
 
     //Inicializar la API con 3 usuarios precargados, 2 proyectos y 2 incidentes
-    private static void init(){
+    private static void init() {
         Usuario usuario1 = new Usuario(1, "Fede1", "Salas1");
         Usuario usuario2 = new Usuario(2, "Fede2", "Salas2");
         Usuario usuario3 = new Usuario(3, "Fede3", "Salas3");

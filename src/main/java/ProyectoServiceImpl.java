@@ -26,30 +26,31 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     @Override
     public Proyecto editProyecto(Proyecto proyecto) throws ProyectoException {
-        try {
-            if (proyecto.getId() == 0) {
-                throw new UsuarioException("El id del usuario que desea editar no puede ser nulo");
+        int contador = 0;
+        for (Proyecto p : getProyectos()) {
+            if (p.getId() == proyecto.getId()) {
+                contador++;
             }
-            Proyecto proyectoAEditar = proyectoHashMap.get(proyecto.getId());
-            //A continuacion comienzo a editar el proyecto
-            if (proyecto.getTitulo() != null) {
-                proyectoAEditar.setTitulo(proyecto.getTitulo());
-            }
-            if (proyecto.getPropietario() != null) {
-                proyectoAEditar.setPropietario(proyecto.getPropietario());
-            }
-            return proyectoAEditar;
-
-        } catch (Exception exception) {
-            throw new ProyectoException(exception.getMessage());
         }
+        if (contador == 0) {
+            throw new ProyectoException("El id del proyecto que desea editar no corresponde a un proyecto existente");
+        }
+        Proyecto proyectoAEditar = proyectoHashMap.get(proyecto.getId());
+        //A continuacion comienzo a editar el proyecto
+        if (proyecto.getTitulo() != null) {
+            proyectoAEditar.setTitulo(proyecto.getTitulo());
+        }
+        if (proyecto.getPropietario() != null) {
+            proyectoAEditar.setPropietario(proyecto.getPropietario());
+        }
+        return proyectoAEditar;
     }
 
     @Override
-    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws IncidenteException{
-        int contador=0;
+    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws IncidenteException {
+        int contador = 0;
         for (Incidente i : incidentes) {
-            if (i.getProyecto().getId()==id) {
+            if (i.getProyecto().getId() == id) {
                 contador++;
             }
         }
@@ -65,7 +66,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     public Collection<Proyecto> getProyectosDeUs(Usuario usuario) {
         HashMap<Integer, Proyecto> proyectosDeUs = new HashMap<>();
         for (Proyecto p : getProyectos()) {
-            if (p.getPropietario().getId()==usuario.getId()) {
+            if (p.getPropietario().getId() == usuario.getId()) {
                 proyectosDeUs.put(p.getId(), p);
             }
         }

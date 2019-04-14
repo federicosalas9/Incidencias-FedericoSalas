@@ -28,10 +28,15 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario editUsuario(Usuario usuario) throws UsuarioException {
-        try {
-            if (usuario.getId() == 0) {
-                throw new UsuarioException("El id del usuario que desea editar no puede ser nulo");
+        int contador = 0;
+        for (Usuario u : getUsuarios()) {
+            if (usuario.getId() == u.getId()) {
+                contador++;
             }
+        }
+        if (contador == 0) {
+            throw new UsuarioException("El id del usuario que desea editar no corresponde a un usuario existente");
+        } else {
             Usuario usuarioAEditar = usuarioHashMap.get(usuario.getId());
             //A continuacion comienzo a editar el usuario
             if (usuario.getNombre() != null) {
@@ -41,14 +46,12 @@ public class UsuarioServiceImpl implements UsuarioService {
                 usuarioAEditar.setApellido(usuario.getApellido());
             }
             return usuarioAEditar;
-
-        } catch (Exception exception) {
-            throw new UsuarioException(exception.getMessage());
         }
     }
 
     @Override
-    public void deleteUsuario(int id, Collection<Proyecto> proyectos, Collection<Incidente> incidentes) throws UsuarioException {
+    public void deleteUsuario(int id, Collection<Proyecto> proyectos, Collection<Incidente> incidentes) throws
+            UsuarioException {
         int contador = 0;
         for (Proyecto p : proyectos) {
             if (p.getPropietario().getId() == id) {
