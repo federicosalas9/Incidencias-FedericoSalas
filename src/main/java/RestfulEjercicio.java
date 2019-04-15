@@ -114,11 +114,26 @@ public class RestfulEjercicio {
         });
 
         //Crear un incidente
-        post("/usuarios/incidentes", (request, response) -> {
+        post("/incidentes", (request, response) -> {
             response.type("application/json");
             Incidente incidente = new Gson().fromJson(request.body(), Incidente.class);
             incidenteService.addIncidente(incidente);
+            response.status(201);
             return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS));
+        });
+
+        //Editar un incidente segun el id
+        put("/incidentes", (request, response) -> {
+            try {
+                response.type("application/json");
+                Incidente incidente = new Gson().fromJson(request.body(), Incidente.class);
+                Incidente incidenteEditado = incidenteService.editIncidente(incidente);
+                response.status(201);
+                return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(incidenteEditado)));
+            } catch (Exception exception) {
+                response.status(400);
+                return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, exception.getMessage()));
+            }
         });
 
         //Mostrar todos los incidentes
@@ -177,7 +192,7 @@ public class RestfulEjercicio {
 
     }
 
-    //Inicializar la API con 3 usuarios precargados, 2 proyectos y 2 incidentes
+    //Inicializar la API con 3 usuarios, 2 proyectos y 2 incidentes
     private static void init() {
         Usuario usuario1 = new Usuario(1, "Fede1", "Salas1");
         Usuario usuario2 = new Usuario(2, "Fede2", "Salas2");
@@ -191,11 +206,13 @@ public class RestfulEjercicio {
         proyectoService.addProyecto(proyecto2);
         Incidente incidente1 = new Incidente(111, Clasificacion.CRITICO,
                 "El incidente1 asignado al proy 1 del us 1", usuario3, usuario1,
-                Estado.ASIGNADO, new Date(), new Date(), proyecto1);
+                Estado.ASIGNADO, new Date(2019, 3, 14, 10, 30, 15),
+                new Date(2019, 3, 15, 10, 30, 15), proyecto1);
         Incidente incidente2 = new Incidente(222, Clasificacion.NORMAL,
                 "El incidente2 asignado al proy 2 del us 2",
                 usuario3, usuario2,
-                Estado.RESUELTO, new Date(), new Date(), proyecto2);
+                Estado.RESUELTO, new Date(2019, 3, 14, 10, 30, 15),
+                new Date(2019, 3, 15, 10, 30, 15), proyecto2);
         incidenteService.addIncidente(incidente1);
         incidenteService.addIncidente(incidente2);
     }

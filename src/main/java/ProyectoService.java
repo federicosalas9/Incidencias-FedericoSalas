@@ -10,7 +10,7 @@ public interface ProyectoService {
 
     public Proyecto editProyecto(Proyecto proyecto) throws ProyectoException;
 
-    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws IncidenteException;
+    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws ProyectoException;
 
     public Collection<Proyecto> getProyectosDeUs(Usuario usuario);
 }

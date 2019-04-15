@@ -47,7 +47,7 @@ public class ProyectoServiceImpl implements ProyectoService {
     }
 
     @Override
-    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws IncidenteException {
+    public void deleteProyecto(int id, Collection<Incidente> incidentes) throws ProyectoException {
         int contador = 0;
         for (Incidente i : incidentes) {
             if (i.getProyecto().getId() == id) {
@@ -55,7 +55,7 @@ public class ProyectoServiceImpl implements ProyectoService {
             }
         }
         if (contador > 0) {
-            throw new IncidenteException("El proyecto tiene al menos un incidente reportado");
+            throw new ProyectoException("El proyecto tiene al menos un incidente reportado");
         } else {
             proyectoHashMap.remove(id);
         }

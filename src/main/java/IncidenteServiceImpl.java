@@ -15,8 +15,26 @@ public class IncidenteServiceImpl implements IncidenteService {
     }
 
     @Override
-    public void editIncidente(Incidente incidente) throws IncidenteException {
-
+    public Incidente editIncidente(Incidente incidente) throws IncidenteException {
+        int contador = 0;
+        for (Incidente i : getIncidentes()) {
+            if (incidente.getId() == i.getId() && incidente.getClasificacion().equals(i.getClasificacion())
+                    && incidente.getResponsable().getId() == i.getResponsable().getId()
+                    && incidente.getReportador().getId() == i.getReportador().getId()
+                    && incidente.getFechaCreacion().equals(i.getFechaCreacion())
+                    && incidente.getFechaResolucion().equals(i.getFechaResolucion())
+                    && incidente.getProyecto().getId() == i.getProyecto().getId()) {
+                contador++;
+            }
+        }
+        if (contador > 0) {
+            incidenteHashMap.get(incidente.getId()).setEstado(incidente.getEstado());
+            incidenteHashMap.get(incidente.getId()).setDescripcion(incidente.getDescripcion());
+            return incidenteHashMap.get(incidente.getId());
+        } else {
+            throw new IncidenteException("El incidente no puede ser completamente modificado, solo se le puede añadir texto a la descripcion" +
+                    " y cambiar su estado a RESUELTO");
+        }
     }
 
     @Override
