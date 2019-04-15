@@ -28,6 +28,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public Usuario editUsuario(Usuario usuario) throws UsuarioException {
+        /*Corroboro que el id del usuario parámetro corresponda a un usuario existente para poder editarlo
+        de lo contrario lanzo una excepcion*/
         int contador = 0;
         for (Usuario u : getUsuarios()) {
             if (usuario.getId() == u.getId()) {
@@ -52,6 +54,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void deleteUsuario(int id, Collection<Proyecto> proyectos, Collection<Incidente> incidentes) throws
             UsuarioException {
+
+        //Corroboro que el usuario a eliminar no sea propietario de un proyecto, responsable o reportador, de lo contrario lanzo una excepcion
         int contador = 0;
         for (Proyecto p : proyectos) {
             if (p.getPropietario().getId() == id) {

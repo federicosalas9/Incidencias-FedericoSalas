@@ -26,6 +26,9 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     @Override
     public Proyecto editProyecto(Proyecto proyecto) throws ProyectoException {
+
+        /*Corroboro que el id del proyecto parámetro corresponda a un proyecto existente para poder editarlo
+        de lo contrario lanzo una excepcion*/
         int contador = 0;
         for (Proyecto p : getProyectos()) {
             if (p.getId() == proyecto.getId()) {
@@ -48,6 +51,7 @@ public class ProyectoServiceImpl implements ProyectoService {
 
     @Override
     public void deleteProyecto(int id, Collection<Incidente> incidentes) throws ProyectoException {
+        //Corroboro que el proyecto a eliminar no tenga ningun incidente reportado, de lo contrario lanzo una excepcion
         int contador = 0;
         for (Incidente i : incidentes) {
             if (i.getProyecto().getId() == id) {

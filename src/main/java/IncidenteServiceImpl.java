@@ -16,6 +16,8 @@ public class IncidenteServiceImpl implements IncidenteService {
 
     @Override
     public Incidente editIncidente(Incidente incidente) throws IncidenteException {
+        /*Si ninguno de los demas atributos del incidente fue modificado edito la descripcion y el estado
+          de lo contrario lanzo una excepcion*/
         int contador = 0;
         for (Incidente i : getIncidentes()) {
             if (incidente.getId() == i.getId() && incidente.getClasificacion().equals(i.getClasificacion())
